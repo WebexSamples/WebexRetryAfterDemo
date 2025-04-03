@@ -1,32 +1,33 @@
-import urllib2
+import urllib.request
+import urllib.error
 import json
 import time
 
-def sendSparkGET(url):
-    request = urllib2.Request(url,
-                            headers={"Accept" : "application/json",
-                                     "Content-Type":"application/json"})
-    request.add_header("Authorization", "Bearer "+bearer)
-    response = urllib2.urlopen(request)
+def sendWebexGET(url):
+    request = urllib.request.Request(url,
+                                     headers={"Accept": "application/json",
+                                              "Content-Type": "application/json"})
+    request.add_header("Authorization", "Bearer " + bearer)
+    response = urllib.request.urlopen(request)
     return response
 
-bearer = "BEARER_TOKEN_HERE"
+bearer = "PERSONAL_ACCESS_TOKEN"
 
 while True:
     try:
-        result = sendSparkGET('https://api.ciscospark.com/v1/rooms')
-        print result.code, time.time(), result.headers['Trackingid']
-    except urllib2.HTTPError as e:
+        result = sendWebexGET('https://integration.webexapis.com/v1/rooms')
+        print(result.getcode(), time.time(), result.headers['Trackingid'])
+    except urllib.error.HTTPError as e:
         if e.code == 429:
-            print 'code', e.code
-            print 'headers', e.headers
-            print 'Sleeping for', e.headers['Retry-After'], 'seconds'
+            print('code', e.code)
+            print('headers', e.headers)
+            print('Sleeping for', e.headers['Retry-After'], 'seconds')
             sleep_time = int(e.headers['Retry-After'])
             while sleep_time > 10:
                 time.sleep(10)
                 sleep_time -= 10
-                print 'Asleep for', sleep_time, 'more seconds'
+                print('Asleep for', sleep_time, 'more seconds')
             time.sleep(sleep_time)
         else:
-            print e, e.code
+            print(e, e.code)
             break
