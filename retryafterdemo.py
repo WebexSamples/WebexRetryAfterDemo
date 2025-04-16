@@ -15,9 +15,9 @@ bearer = "PERSONAL_ACCESS_TOKEN"
 
 while True:
     try:
-        result = sendWebexGET('https://integration.webexapis.com/v1/rooms')
+        result = sendWebexGET('https://webexapis.com/v1/rooms')
         print(result.getcode(), time.time(), result.headers['Trackingid'])
-    except urllib.error.HTTPError as e:
+        except urllib.error.HTTPError as e:
         if e.code == 429:
             print('code', e.code)
             print('headers', e.headers)
